@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product and User List</title>
+</head>
+<body>
+<h1>Welcome to the Product and User Dashboard</h1>
+<p>Use the buttons below to view the product and user lists.</p>
+
+<button onclick="fetchProductList()">View Product List</button>
+<button onclick="fetchUserList()">View User List</button>
+<div id="content" style="margin-top: 20px;"></div>
+
+<h2>Add a New User</h2>
+<form id="userForm" action="http://localhost:8080/api/users" method="POST">
+    <label for="firstName">First Name:</label>
+    <input type="text" id="firstName" name="firstName" required>
+
+    <label for="lastName">Last Name:</label>
+    <input type="text" id="lastName" name="lastName" required>
+
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required>
+
+    <button type="submit">Add User</button>
+</form>
+
+<script>
+    function fetchProductList() {
+        fetch('http://localhost:8080/api/products')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('content').innerHTML = '<h2>Product List</h2><pre>' + JSON.stringify(data, null, 2) + '</pre>';
+            })
+            .catch(error => {
+                document.getElementById('content').innerHTML = '<p>Error fetching product list.</p>';
+                console.error('Error fetching product list:', error);
+            });
+    }
+    function fetchUserList() {
+        fetch('http://localhost:8080/api/users')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('content').innerHTML = '<h2>User List</h2><pre>' + JSON.stringify(data, null, 2) + '</pre>';
+            })
+            .catch(error => {
+                document.getElementById('content').innerHTML = '<p>Error fetching user list.</p>';
+                console.error('Error fetching user list:', error);
+            });
+    }
+</script>
+</body>
+</html>
