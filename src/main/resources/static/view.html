@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product and User List</title>
+</head>
+<body>
+<h1>Welcome to the Product and User Dashboard</h1>
+<p>Use the buttons below to view the product and user lists.</p>
+
+<button onclick="fetchProductList()">View Product List</button>
+<button onclick="fetchUserList()">View User List</button>
+<div id="content" style="margin-top: 20px;"></div>
+
+<h2>Add a New User</h2>
+<form id="userForm" action="http://localhost:8080/api/users" method="POST">
+    <label for="firstName">First Name:</label>
+    <input type="text" id="firstName" name="firstName" required>
+
+    <label for="lastName">Last Name:</label>
+    <input type="text" id="lastName" name="lastName" required>
+
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required>
+
+    <button type="submit">Add User</button>
+</form>
+
+<h2>Add a New Product (Extended)</h2>
+<form id="productForm">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" required>
+    <br>
+    <label for="description">Description:</label>
+    <input type="text" id="description" name="description" required>
+    <br>
+    <label for="price">Price:</label>
+    <input type="number" id="price" name="price" step="0.01" required>
+    <br>
+    <label for="size">Size:</label>
+    <input type="text" id="size" name="size" required>
+    <br>
+    <label for="color">Color:</label>
+    <input type="text" id="color" name="color" required>
+    <br>
+    <label for="category">Category:</label>
+    <input type="text" id="category" name="category" required>
+    <br>
+    <button type="button" onclick="submitProduct()">Add Product</button>
+</form>
+<p id="response"></p>
+
+<h1>Delete a Product</h1>
+<label for="productId">Product ID to delete:</label>
+<input type="text" id="productId" name="productId" required>
+<button id="delete">Delete Product</button>
+<p id="responseMessage"></p>
+
+<script>
+    document.getElementById('delete').addEventListener('click', async () => {
+        const productId = document.getElementById('productId').value;
+
+        try {
+            const response = await fetch(`api/products/${productId}`, {
+                method: 'DELETE'
+            });
+
+            if (response.ok) {
+                document.getElementById('responseMessage').textContent = "Product deleted successfully.";
+                console.log("Deletion successful:", await response.json());
+            } else if (response.status === 404) {
+                document.getElementById('responseMessage').textContent = "Product not found.";
+                console.log("Product not found.");
+            } else {
+                document.getElementById('responseMessage').textContent = "Failed to delete the product.";
+                console.log("Deletion failed with status:", response.status);
+            }
+        } catch (error) {
+            document.getElementById('responseMessage').textContent = "An error occurred while deleting.";
+            console.error("Error:", error);
+        }
+    });
+    function fetchProductList() {
+        fetch('http://localhost:8080/api/products')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('content').innerHTML = '<h2>Product List</h2><pre>' + JSON.stringify(data, null, 2) + '</pre>';
+            })
+            .catch(error => {
+                document.getElementById('content').innerHTML = '<p>Error fetching product list.</p>';
+                console.error('Error fetching product list:', error);
+            });
+    }
+    function fetchUserList() {
+        fetch('http://localhost:8080/api/users')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('content').innerHTML = '<h2>User List</h2><pre>' + JSON.stringify(data, null, 2) + '</pre>';
+            })
+            .catch(error => {
+                document.getElementById('content').innerHTML = '<p>Error fetching user list.</p>';
+                console.error('Error fetching user list:', error);
+            });
+    }
+    async function submitProduct() {
+        const name = document.getElementById('name').value;
+        const description = document.getElementById('description').value;
+        const color = document.getElementById('color').value;
+        const size = document.getElementById('size').value;
+        const category = document.getElementById('category').value;
+        const price = parseFloat(document.getElementById('price').value);
+
+        const product = { name, price, size, color, description, category };
+
+        const response = await fetch('api/products', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(product)
+        });
+
+        const result = await response.json();
+        document.getElementById('response').textContent = result.message;
+    }
+</script>
+</body>
+</html>

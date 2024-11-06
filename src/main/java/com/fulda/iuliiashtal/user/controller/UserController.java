@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,7 +20,7 @@ public class UserController {
     }
 
     @GetMapping("api/users/{id}")
-    public User getUserDetail(@PathVariable Long id) {
+    public User getUserDetail(@PathVariable UUID id) {
         return userService.getUserById(id).orElse(null);
     }
 

@@ -24,7 +24,7 @@ public class UserService {
         return readFromJson();
     }
 
-    public Optional<User> getUserById(Long id) {
+    public Optional<User> getUserById(UUID id) {
         return getUsers().stream().filter(product -> product.getId().equals(id)).findFirst();
     }
 
@@ -38,7 +38,7 @@ public class UserService {
     public User create(String firstName, String lastName,
                        String email) {
         List<User> users = getUsers();
-        User newUser = new User((long) (users.size() + 1), firstName, lastName, email, "defaultPassword");
+        User newUser = new User(UUID.randomUUID(), firstName, lastName, email, "defaultPassword");
         users.add(newUser);
         writeToJson(users);
         return newUser;

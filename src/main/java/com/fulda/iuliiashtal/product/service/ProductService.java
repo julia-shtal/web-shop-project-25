@@ -1,41 +1,105 @@
 package com.fulda.iuliiashtal.product.service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fulda.iuliiashtal.product.entity.Product;
+import com.fulda.iuliiashtal.user.entity.User;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
 
-    private static final List<Product> products = Arrays.asList(
-            new Product(1L, "Hat", 12.99, "S", "Yellow", "A casual yellow hat.", "Accessories"),
-            new Product(2L, "T-Shirt", 9.99, "S", "White", "A comfortable white T-shirt.", "Apparel"),
-            new Product(3L, "Gloves", 5.99, "M", "Blue", "Stylish blue gloves.", "Accessories"),
-            new Product(4L, "Jacket", 89.99, "L", "Black", "Warm black jacket.", "Outerwear"),
-            new Product(5L, "Sneakers", 69.99, "44", "Red", "Trendy red sneakers.", "Footwear")
-    );
-
-    public List<Product> getProducts() {
-        return products;
+    public boolean isDuplicate(Product product) {
+        return getProducts().stream().anyMatch(p -> p.getName().equalsIgnoreCase(product.getName()));
     }
 
-    public Optional<Product> getProductById(Long id) {
-        return products.stream().filter(product -> product.getId().equals(id)).findFirst();
+    public List<Product> getProducts() {
+        return readFromJson();
+    }
+
+    public Optional<Product> getProductById(UUID id) {
+        return getProducts().stream().filter(product -> product.getId().equals(id)).findFirst();
     }
 
     public List<Product> getProductsByColor(String color) {
-        return products.stream()
+        return getProducts().stream()
                 .filter(product -> product.getColor().equalsIgnoreCase(color))
                 .collect(Collectors.toList());
     }
 
-    public List<Product>getProductsByCategory(String category) {
-        return products.stream()
+    public List<Product> getProductsByCategory(String category) {
+        return getProducts().stream()
                 .filter(product -> product.getCategory().equalsIgnoreCase(category))
                 .collect(Collectors.toList());
+    }
+
+    public Product create(Product product) {
+        writeItemToJson(product);
+        return product;
+    }
+
+    public boolean delete(UUID id) {
+        List<Product> products = readFromJson();
+        Optional<Product> foundProduct = products.stream().filter(product -> product.getId().equals(id))
+                .findFirst();
+        if (foundProduct.isPresent()) {
+            products.remove(foundProduct.get());
+            writeToJson(products);
+            return true;
+        }
+        return false;
+    }
+
+    //Simulate DB
+    private void writeItemToJson(Product product) {
+        List<Product> products = readFromJson();
+        product.setId(UUID.randomUUID());
+        Objects.requireNonNull(products).add(product);
+        writeToJson(products);
+    }
+
+    //Simulate DB
+    private void writeToJson(List<Product> products) {
+        JSONArray jsonArray = new JSONArray();
+        for (Product product : products) {
+            jsonArray.put(new JSONObject()
+                    .put("id", product.getId())
+                    .put("name", product.getName())
+                    .put("price", product.getPrice())
+                    .put("size", product.getSize())
+                    .put("description", product.getDescription())
+                    .put("category", product.getCategory())
+                    .put("color", product.getColor()));
+        }
+        Path filePath = Paths.get("products.json");
+        try {
+            Files.write(filePath, jsonArray.toString(4).getBytes());  // 4 is for pretty-print indentation
+            System.out.println("JSON array written to file successfully.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    //Simulate DB
+    private List<Product> readFromJson() {
+        File jsonFile = new File("products.json");
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.readValue(jsonFile, new TypeReference<ArrayList<Product>>() {
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

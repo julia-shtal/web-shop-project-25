@@ -1,0 +1,65 @@
+[
+    {
+        "size": "S",
+        "color": "Yellow",
+        "price": 12.99,
+        "name": "Hat",
+        "description": "A casual yellow hat.",
+        "id": "d226ced6-cc7d-4bc0-a18a-b18e9f2e799b",
+        "category": "Accessories"
+    },
+    {
+        "size": "S",
+        "color": "White",
+        "price": 9.99,
+        "name": "T-Shirt",
+        "description": "A comfortable white T-shirt.",
+        "id": "61cc7226-440b-41fc-b29f-afbdac60851e",
+        "category": "Apparel"
+    },
+    {
+        "size": "M",
+        "color": "Blue",
+        "price": 5.99,
+        "name": "Gloves",
+        "description": "Stylish blue gloves.",
+        "id": "bc8d91de-429e-4bd6-923c-a425640744be",
+        "category": "Accessories"
+    },
+    {
+        "size": "L",
+        "color": "Black",
+        "price": 89.99,
+        "name": "Jacket",
+        "description": "Warm black jacket.",
+        "id": "0a38a4d9-c856-4f61-a817-113bce95ac1b",
+        "category": "Outerwear"
+    },
+    {
+        "size": "44",
+        "color": "Red",
+        "price": 69.99,
+        "name": "Sneakers",
+        "description": "Trendy red sneakers.",
+        "id": "c8580507-b367-4d37-8a76-043ebe7b89c3",
+        "category": "Footwear"
+    },
+    {
+        "size": "S",
+        "color": "White",
+        "price": 0.34,
+        "name": "Test-2",
+        "description": "Test descr",
+        "id": "b9e20522-1ba8-4929-a9be-46f767fc38aa",
+        "category": "Other"
+    },
+    {
+        "size": "G",
+        "color": "Red",
+        "price": 1,
+        "name": "Test",
+        "description": "---",
+        "id": "69f814fe-cbfa-440a-9a1c-d786f51481a6",
+        "category": "Tested"
+    }
+]
