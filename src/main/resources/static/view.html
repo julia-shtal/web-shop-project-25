@@ -27,7 +27,7 @@
     <button type="submit">Add User</button>
 </form>
 
-<h2>Add a New Product (Extended)</h2>
+<h2>Add a New Product</h2>
 <form id="productForm">
     <label for="name">Name:</label>
     <input type="text" id="name" name="name" required>
@@ -49,38 +49,42 @@
     <br>
     <button type="button" onclick="submitProduct()">Add Product</button>
 </form>
-<p id="response"></p>
+<p id="createMessage"></p>
 
-<h1>Delete a Product</h1>
-<label for="productId">Product ID to delete:</label>
-<input type="text" id="productId" name="productId" required>
+<h2>Update Product</h2>
+<form id="updateProductForm">
+    <label for="productId">Product ID:</label>
+    <input type="text" id="productId" name="productId" required>
+    <br>
+    <label for="updateName">New Name:</label>
+    <input type="text" id="updateName" name="name" required>
+    <br>
+    <label for="updateDescription">New Description:</label>
+    <input type="text" id="updateDescription" name="description" required>
+    <br>
+    <label for="updatePrice">New Price:</label>
+    <input type="number" id="updatePrice" name="price" step="0.01" required>
+    <br>
+    <label for="updateSize">New Size:</label>
+    <input type="text" id="updateSize" name="size" required>
+    <br>
+    <label for="updateColor">New Color:</label>
+    <input type="text" id="updateColor" name="color" required>
+    <br>
+    <label for="updateCategory">New Category:</label>
+    <input type="text" id="updateCategory" name="category" required>
+    <br>
+    <button type="button" onclick="updateProduct()">Update Product</button>
+</form>
+<p id="updateMessage"></p>
+
+<h2>Delete a Product</h2>
+<label for="productIdForDelete">Product ID to delete:</label>
+<input type="text" id="productIdForDelete" name="productId" required>
 <button id="delete">Delete Product</button>
-<p id="responseMessage"></p>
+<p id="deleteMessage"></p>
 
 <script>
-    document.getElementById('delete').addEventListener('click', async () => {
-        const productId = document.getElementById('productId').value;
-
-        try {
-            const response = await fetch(`api/products/${productId}`, {
-                method: 'DELETE'
-            });
-
-            if (response.ok) {
-                document.getElementById('responseMessage').textContent = "Product deleted successfully.";
-                console.log("Deletion successful:", await response.json());
-            } else if (response.status === 404) {
-                document.getElementById('responseMessage').textContent = "Product not found.";
-                console.log("Product not found.");
-            } else {
-                document.getElementById('responseMessage').textContent = "Failed to delete the product.";
-                console.log("Deletion failed with status:", response.status);
-            }
-        } catch (error) {
-            document.getElementById('responseMessage').textContent = "An error occurred while deleting.";
-            console.error("Error:", error);
-        }
-    });
     function fetchProductList() {
         fetch('http://localhost:8080/api/products')
             .then(response => response.json())
@@ -113,17 +117,89 @@
 
         const product = { name, price, size, color, description, category };
 
-        const response = await fetch('api/products', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(product)
-        });
+        try {
+            const response = await fetch('api/products', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(product)
+            });
 
-        const result = await response.json();
-        document.getElementById('response').textContent = result.message;
+            if (response.status === 201) {
+                const createdProduct = await response.json();
+                document.getElementById('createMessage').textContent = "Product created successfully: " + JSON.stringify(createdProduct);
+                console.log("Created product: ", createdProduct);
+            } else if (response.status === 409) {
+                document.getElementById('createMessage').textContent = "Product already exists.";
+                console.log("Product already exists.");
+            } else {
+                document.getElementById('createMessage').textContent = "Failed to create product.";
+                console.log("Create failed with status: ", response.status);
+            }
+        } catch (error) {
+            document.getElementById('createMessage').textContent = "An error occurred while creating.";
+            console.error("Error: ", error);
+        }
     }
+    async function updateProduct() {
+        const productId = document.getElementById('productId').value;
+        const name = document.getElementById('updateName').value;
+        const description = document.getElementById('updateDescription').value;
+        const price = parseFloat(document.getElementById('updatePrice').value);
+        const color = document.getElementById('updateColor').value;
+        const size = document.getElementById('updateSize').value;
+        const category = document.getElementById('updateCategory').value;
+
+        const product = { id: productId, name, price, size, color, description, category };
+
+        try {
+            const response = await fetch('api/products', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(product)
+            });
+
+            if (response.ok) {
+                const updatedProduct = await response.json();
+                document.getElementById('updateMessage').textContent = "Product updated successfully: " + JSON.stringify(updatedProduct);
+                console.log("Updated product: ", updatedProduct);
+            } else if (response.status === 404) {
+                document.getElementById('updateMessage').textContent = "Product not found.";
+                console.log("Product not found.");
+            } else {
+                document.getElementById('updateMessage').textContent = "Failed to update product.";
+                console.log("Update failed with status: ", response.status);
+            }
+        } catch (error) {
+            document.getElementById('updateMessage').textContent = "An error occurred while updating.";
+            console.error("Error: ", error);
+        }
+    }
+    document.getElementById('delete').addEventListener('click', async () => {
+        const productId = document.getElementById('productIdForDelete').value;
+        try {
+            const response = await fetch(`api/products/${productId}`, {
+                method: 'DELETE'
+            });
+
+            if (response.ok) {
+                document.getElementById('deleteMessage').textContent = "Product deleted successfully.";
+                console.log("Deletion successful: ", await response.json());
+            } else if (response.status === 404) {
+                document.getElementById('deleteMessage').textContent = "Product not found.";
+                console.log("Product not found.");
+            } else {
+                document.getElementById('deleteMessage').textContent = "Failed to delete the product.";
+                console.log("Deletion failed with status: ", response.status);
+            }
+        } catch (error) {
+            document.getElementById('deleteMessage').textContent = "An error occurred while deleting.";
+            console.error("Error: ", error);
+        }
+    });
 </script>
 </body>
 </html>

@@ -42,12 +42,21 @@ public class ProductController {
     }
 
     @PostMapping("api/products")
-    public ResponseEntity<String> createProduct(@RequestBody Product product) {
-        if (productService.isDuplicate(product)) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Product already exists.");
+    public ResponseEntity<Product> createProduct(@RequestBody Product product) {
+        if (productService.checkExists(product)) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
         }
-        productService.create(product);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Product created successfully.");
+        return ResponseEntity.status(HttpStatus.CREATED).body(productService.create(product));
+    }
+
+    @PutMapping("api/products")
+    public ResponseEntity<Product> updateProduct(@RequestBody Product product) {
+        Product updatedProduct = productService.updateProduct(product);
+        if (updatedProduct != null) {
+            return ResponseEntity.ok(updatedProduct);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
     }
 
     @DeleteMapping("api/products/{id}")

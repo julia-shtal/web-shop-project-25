@@ -3,7 +3,6 @@ package com.fulda.iuliiashtal.product.service;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fulda.iuliiashtal.product.entity.Product;
-import com.fulda.iuliiashtal.user.entity.User;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
@@ -19,7 +18,7 @@ import java.util.stream.Collectors;
 @Service
 public class ProductService {
 
-    public boolean isDuplicate(Product product) {
+    public boolean checkExists(Product product) {
         return getProducts().stream().anyMatch(p -> p.getName().equalsIgnoreCase(product.getName()));
     }
 
@@ -44,8 +43,24 @@ public class ProductService {
     }
 
     public Product create(Product product) {
+        product.setId(product.getId() == null ? UUID.randomUUID() : product.getId());
         writeItemToJson(product);
         return product;
+    }
+
+    public Product updateProduct(Product product) {
+        for (Product existingProduct : getProducts()) {
+            if (existingProduct.getId().equals(product.getId())) {
+                existingProduct.setName(product.getName());
+                existingProduct.setDescription(product.getDescription());
+                existingProduct.setPrice(product.getPrice());
+                existingProduct.setSize(product.getSize());
+                existingProduct.setColor(product.getColor());
+                existingProduct.setCategory(product.getCategory());
+                return create(existingProduct);
+            }
+        }
+        return null;
     }
 
     public boolean delete(UUID id) {
@@ -63,7 +78,6 @@ public class ProductService {
     //Simulate DB
     private void writeItemToJson(Product product) {
         List<Product> products = readFromJson();
-        product.setId(UUID.randomUUID());
         Objects.requireNonNull(products).add(product);
         writeToJson(products);
     }
@@ -102,4 +116,6 @@ public class ProductService {
         }
         return null;
     }
+
+
 }

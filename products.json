@@ -61,5 +61,14 @@
         "description": "---",
         "id": "69f814fe-cbfa-440a-9a1c-d786f51481a6",
         "category": "Tested"
+    },
+    {
+        "size": "T",
+        "color": "Red",
+        "price": 2,
+        "name": "Test",
+        "description": "This is test object",
+        "id": "69f814fe-cbfa-440a-9a1c-d786f51481a6",
+        "category": "Tested"
     }
 ]
