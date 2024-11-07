@@ -25,7 +25,7 @@ public class UserService {
     }
 
     public Optional<User> getUserById(UUID id) {
-        return getUsers().stream().filter(product -> product.getId().equals(id)).findFirst();
+        return getUsers().stream().filter(user -> user.getId().equals(id)).findFirst();
     }
 
     public List<User> getUsersByFullName(String firstName, String lastName) {
@@ -49,7 +49,8 @@ public class UserService {
         JSONArray jsonArray = new JSONArray();
         for (User user : users) {
             jsonArray.put(new JSONObject()
-                    .put("id", user.getId()).put("firstName", user.getFirstName())
+                    .put("id", user.getId())
+                    .put("firstName", user.getFirstName())
                     .put("lastName", user.getLastName())
                     .put("email", user.getEmail())
                     .put("password", user.getPassword()));
@@ -68,7 +69,8 @@ public class UserService {
         File jsonFile = new File("users.json");
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            return objectMapper.readValue(jsonFile, new TypeReference<ArrayList<User>>() {});
+            return objectMapper.readValue(jsonFile, new TypeReference<ArrayList<User>>() {
+            });
         } catch (IOException e) {
             e.printStackTrace();
         }

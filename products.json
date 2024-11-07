@@ -70,5 +70,23 @@
         "description": "This is test object",
         "id": "69f814fe-cbfa-440a-9a1c-d786f51481a6",
         "category": "Tested"
+    },
+    {
+        "size": "1",
+        "color": "1",
+        "price": 1,
+        "name": "Box",
+        "description": "1",
+        "id": "95878a66-0831-46f4-b675-ab05b3c2146e",
+        "category": "11"
+    },
+    {
+        "size": "4",
+        "color": "4",
+        "price": 4,
+        "name": "jey",
+        "description": "-",
+        "id": "c00555cc-6a41-49ba-9198-d6682ab4e6ed",
+        "category": "4"
     }
 ]
