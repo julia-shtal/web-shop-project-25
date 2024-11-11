@@ -45,7 +45,7 @@ public class ProductRepository {
         Path filePath = Paths.get("products.json");
         try {
             Files.write(filePath, jsonArray.toString(4).getBytes());  // 4 is for pretty-print indentation
-            log.info("JSON array written to file successfully.");
+            log.info("JSON array was written to file successfully.");
         } catch (IOException e) {
             e.printStackTrace();
         }

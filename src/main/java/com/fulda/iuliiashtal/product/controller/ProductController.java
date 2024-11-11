@@ -18,6 +18,40 @@ public class ProductController {
 
     private final ProductService productService;
 
+    @GetMapping("/catalog")
+    public String viewCatalog(Model model, @RequestParam(required = false, defaultValue = "false") boolean edit) {
+        List<Product> products = productService.getAllProducts();
+        model.addAttribute("products", products);
+        model.addAttribute("editMode", edit);
+        return "catalog";
+    }
+
+    @GetMapping("/product/{id}")
+    public String viewProductDetail(@PathVariable UUID id, Model model) {
+        Product product = productService.getProductById(id);
+        model.addAttribute("product", product);
+        return "productDetail";
+    }
+
+    @GetMapping("/add-product")
+    public String showAddProductForm(Model model) {
+        model.addAttribute("product", new Product());
+        return "add-product";
+    }
+
+    @PostMapping("/add-product")
+    public String addProduct(@ModelAttribute Product product) {
+        productService.createProduct(product);
+        return "redirect:/product/" + product.getId();
+    }
+
+    @GetMapping("/product-delete/{id}")
+    public String deleteProduct(@PathVariable UUID id) {
+        productService.deleteProduct(id);
+        return "redirect:/catalog?edit=true";
+    }
+
+    /*Deprecated*/
     @GetMapping("api/products")
     public List<Product> getAllProducts() {
         return productService.getAllProducts();
@@ -66,38 +100,5 @@ public class ProductController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(null);
         }
-    }
-
-    @GetMapping("/catalog")
-    public String viewCatalog(Model model, @RequestParam(required = false, defaultValue = "false") boolean edit) {
-        List<Product> products = productService.getAllProducts();
-        model.addAttribute("products", products);
-        model.addAttribute("editMode", edit);
-        return "catalog";
-    }
-
-    @GetMapping("/product/{id}")
-    public String viewProductDetail(@PathVariable UUID id, Model model) {
-        Product product = productService.getProductById(id);
-        model.addAttribute("product", product);
-        return "productDetail";
-    }
-
-    @GetMapping("/add-product")
-    public String showAddProductForm(Model model) {
-        model.addAttribute("product", new Product());
-        return "add-product";
-    }
-
-    @PostMapping("/add-product")
-    public String addProduct(@ModelAttribute Product product) {
-        productService.createProduct(product);
-        return "redirect:/product/" + product.getId();
-    }
-
-    @GetMapping("/product-delete/{id}")
-    public String deleteProduct(@PathVariable UUID id) {
-        productService.deleteProduct(id);
-        return "redirect:/catalog?edit=true";
     }
 }
