@@ -5,30 +5,27 @@ import com.fulda.iuliiashtal.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
 
-@RestController
+@Controller
 @RequiredArgsConstructor
 public class ProductController {
 
     private final ProductService productService;
 
-    @GetMapping("/")
-    public String getHelloWorld() {
-        return "Hello World";
-    }
-
     @GetMapping("api/products")
     public List<Product> getAllProducts() {
-        return productService.getProducts();
+        return productService.getAllProducts();
     }
 
     @GetMapping("api/products/{id}")
     public Product getProductDetail(@PathVariable UUID id) {
-        return productService.getProductById(id).orElse(null);
+        return productService.getProductById(id);
     }
 
     @GetMapping("api/products/color")
@@ -46,7 +43,7 @@ public class ProductController {
         if (productService.checkExists(product)) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body(productService.create(product));
+        return ResponseEntity.status(HttpStatus.CREATED).body(productService.createProduct(product));
     }
 
     @PutMapping("api/products")
@@ -61,13 +58,46 @@ public class ProductController {
 
     @DeleteMapping("api/products/{id}")
     public ResponseEntity<List<Product>> delete(@PathVariable UUID id) {
-        boolean isDeleted = productService.delete(id);
+        boolean isDeleted = productService.deleteProduct(id);
         if (isDeleted) {
-            List<Product> remainingProducts = productService.getProducts();
+            List<Product> remainingProducts = productService.getAllProducts();
             return ResponseEntity.ok(remainingProducts);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(null);
         }
+    }
+
+    @GetMapping("/catalog")
+    public String viewCatalog(Model model, @RequestParam(required = false, defaultValue = "false") boolean edit) {
+        List<Product> products = productService.getAllProducts();
+        model.addAttribute("products", products);
+        model.addAttribute("editMode", edit);
+        return "catalog";
+    }
+
+    @GetMapping("/product/{id}")
+    public String viewProductDetail(@PathVariable UUID id, Model model) {
+        Product product = productService.getProductById(id);
+        model.addAttribute("product", product);
+        return "productDetail";
+    }
+
+    @GetMapping("/add-product")
+    public String showAddProductForm(Model model) {
+        model.addAttribute("product", new Product());
+        return "add-product";
+    }
+
+    @PostMapping("/add-product")
+    public String addProduct(@ModelAttribute Product product) {
+        productService.createProduct(product);
+        return "redirect:/product/" + product.getId();
+    }
+
+    @GetMapping("/product-delete/{id}")
+    public String deleteProduct(@PathVariable UUID id) {
+        productService.deleteProduct(id);
+        return "redirect:/catalog?edit=true";
     }
 }

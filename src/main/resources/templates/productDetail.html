@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .product-container {
+            max-width: 600px;
+            width: 100%;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .product-description {
+            color: #666;
+            font-size: 1em;
+            margin: 15px 0;
+        }
+
+        .product-detail {
+            font-size: 1.1em;
+            margin: 10px 0;
+        }
+
+        .product-price {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #28a745;
+            margin-top: 15px;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 1em;
+            text-align: center;
+            text-decoration: none;
+            color: #fff;
+            background-color: #007bff;
+            border-radius: 5px;
+            margin: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-add-to-cart {
+            background-color: #28a745;
+        }
+
+        .btn-add-to-cart:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+<div class="product-container">
+    <h1 th:text="${product.name}">Product Name</h1>
+    <p class="product-description" th:text="${product.description}">Product Description</p>
+    <p class="product-price">Price: $<span th:text="${product.price}">0.00</span></p>
+    <p class="product-detail">Size: <span th:text="${product.size}">Size</span></p>
+    <p class="product-detail">Color: <span th:text="${product.color}">Color</span></p>
+    <p class="product-detail">Category: <span th:text="${product.category}">Category</span></p>
+
+    <a th:href="@{'/cart-add/' + ${product.id}}" class="btn btn-add-to-cart">Add to Cart</a>
+    <a href="/catalog" class="btn">Back to Catalog</a>
+</div>
+</body>
+</html>

@@ -54,15 +54,6 @@
         "category": "Other"
     },
     {
-        "size": "G",
-        "color": "Red",
-        "price": 1,
-        "name": "Test",
-        "description": "---",
-        "id": "69f814fe-cbfa-440a-9a1c-d786f51481a6",
-        "category": "Tested"
-    },
-    {
         "size": "T",
         "color": "Red",
         "price": 2,
@@ -88,5 +79,23 @@
         "description": "-",
         "id": "c00555cc-6a41-49ba-9198-d6682ab4e6ed",
         "category": "4"
+    },
+    {
+        "size": "S",
+        "color": "Black",
+        "price": 100,
+        "name": "Dress",
+        "description": "Cute dress",
+        "id": "fd6a5bcc-d46b-4207-bd5f-635a56aca0ad",
+        "category": "Dresses"
+    },
+    {
+        "size": "M",
+        "color": "Green",
+        "price": 20,
+        "name": "Trousers",
+        "description": "-",
+        "id": "9d3d9bda-00f6-457c-a8a8-e0610058053e",
+        "category": "Trousers"
     }
 ]
