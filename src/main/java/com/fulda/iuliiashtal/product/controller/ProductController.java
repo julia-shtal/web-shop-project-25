@@ -19,7 +19,7 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping("/catalog")
-    public String viewCatalog(Model model, @RequestParam(required = false, defaultValue = "false") boolean edit) {
+    public String viewCatalog(Model model, @RequestParam(required = false, defaultValue = "true") boolean edit) {
         List<Product> products = productService.getAllProducts();
         model.addAttribute("products", products);
         model.addAttribute("editMode", edit);
@@ -74,7 +74,7 @@ public class ProductController {
 
     @PostMapping("api/products")
     public ResponseEntity<Product> createProduct(@RequestBody Product product) {
-        if (productService.checkExists(product)) {
+        if (productService.checkProductExists(product)) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(productService.createProduct(product));

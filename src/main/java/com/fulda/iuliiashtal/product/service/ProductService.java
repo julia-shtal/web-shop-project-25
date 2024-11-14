@@ -16,7 +16,7 @@ public class ProductService {
 
     private final ProductRepository repository;
 
-    public boolean checkExists(Product product) {
+    public boolean checkProductExists(Product product) {
         return getAllProducts().stream().anyMatch(p -> p.getName().equalsIgnoreCase(product.getName()));
     }
 
@@ -46,18 +46,20 @@ public class ProductService {
     }
 
     public Product updateProduct(Product product) {
-        for (Product existingProduct : getAllProducts()) {
-            if (existingProduct.getId().equals(product.getId())) {
-                existingProduct.setName(product.getName());
-                existingProduct.setDescription(product.getDescription());
-                existingProduct.setPrice(product.getPrice());
-                existingProduct.setSize(product.getSize());
-                existingProduct.setColor(product.getColor());
-                existingProduct.setCategory(product.getCategory());
-                return save(existingProduct);
-            }
+        Optional<Product> optional = getAllProducts().stream()
+                .filter(product1 -> product1.getId().equals(product.getId()))
+                .findFirst();
+        if (optional.isEmpty()) {
+            return null;
         }
-        return null;
+        Product existingProduct = optional.get();
+        existingProduct.setName(product.getName());
+        existingProduct.setDescription(product.getDescription());
+        existingProduct.setPrice(product.getPrice());
+        existingProduct.setSize(product.getSize());
+        existingProduct.setColor(product.getColor());
+        existingProduct.setCategory(product.getCategory());
+        return save(existingProduct);
     }
 
     public Product save(Product product) {
