@@ -80,6 +80,11 @@
         .btn-add-to-cart:hover {
             background-color: #218838;
         }
+        .error {
+            color: red;
+            font-size: 1em;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -93,9 +98,10 @@
     <p class="product-detail" th:if="${!productDetail.soldOut}">
         Available Stock: <span th:text="${productDetail.stock}">0</span>
     </p>
-    <p th:if="${productDetail.soldOut}" style="color: red;">Sold Out</p>
+    <p th:if="${productDetail.soldOut}" class="error">Sold Out</p>
     <a th:if="${!productDetail.soldOut}" th:href="@{'/cart-add/' + ${productDetail.id}}" class="btn btn-add-to-cart">Add to Cart</a>
     <a href="/catalog" class="btn">Back to Catalog</a>
 </div>
+<p th:if="${param.error == 'out-of-stock'}" class="error">This product is out of stock and cannot be added to the cart.</p>
 </body>
 </html>
