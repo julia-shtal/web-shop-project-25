@@ -1,6 +1,6 @@
 package com.fulda.iuliiashtal.product.service;
 
-import com.fulda.iuliiashtal.product.entity.Product;
+import com.fulda.iuliiashtal.product.model.entity.Product;
 import com.fulda.iuliiashtal.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

@@ -1,4 +1,4 @@
-package com.fulda.iuliiashtal.product.entity;
+package com.fulda.iuliiashtal.product.model.entity;
 
 import lombok.*;
 

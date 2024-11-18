@@ -2,7 +2,6 @@ package com.fulda.iuliiashtal.user.repository;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fulda.iuliiashtal.product.entity.Product;
 import com.fulda.iuliiashtal.user.entity.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -17,7 +16,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 //Simulate DB
 @Service

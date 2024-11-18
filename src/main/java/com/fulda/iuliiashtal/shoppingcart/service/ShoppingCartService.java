@@ -1,6 +1,6 @@
 package com.fulda.iuliiashtal.shoppingcart.service;
 
-import com.fulda.iuliiashtal.product.entity.Product;
+import com.fulda.iuliiashtal.product.model.entity.Product;
 import com.fulda.iuliiashtal.product.service.ProductService;
 import com.fulda.iuliiashtal.shoppingcart.entity.ShoppingCart;
 import lombok.RequiredArgsConstructor;

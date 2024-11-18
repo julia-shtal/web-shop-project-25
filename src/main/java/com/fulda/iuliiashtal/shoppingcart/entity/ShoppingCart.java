@@ -1,6 +1,6 @@
 package com.fulda.iuliiashtal.shoppingcart.entity;
 
-import com.fulda.iuliiashtal.product.entity.Product;
+import com.fulda.iuliiashtal.product.model.entity.Product;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

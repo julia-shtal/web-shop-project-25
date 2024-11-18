@@ -1,5 +1,6 @@
 package com.fulda.iuliiashtal.shoppingcart.controller;
 
+import com.fulda.iuliiashtal.shoppingcart.facade.ShoppingCartFacade;
 import com.fulda.iuliiashtal.shoppingcart.service.ShoppingCartService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -13,6 +14,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ShoppingCartController {
 
+    private final ShoppingCartFacade shoppingCartFacade;
     private final ShoppingCartService cartService;
 
 
@@ -24,8 +26,12 @@ public class ShoppingCartController {
 
     @GetMapping("/cart-add/{id}")
     public String addToCart(@PathVariable UUID id) {
-        cartService.addProductByIdToCart(id);
+        boolean added = shoppingCartFacade.addToCart(id);
+        if (!added) {
+            return "redirect:/cart?error=out-of-stock";
+        }
         return "redirect:/cart";
     }
+
 }
 

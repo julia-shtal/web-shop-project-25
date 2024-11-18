@@ -1,6 +1,8 @@
 package com.fulda.iuliiashtal.product.controller;
 
-import com.fulda.iuliiashtal.product.entity.Product;
+import com.fulda.iuliiashtal.product.facade.ProductDetailFacade;
+import com.fulda.iuliiashtal.product.model.dto.ProductDetailDTO;
+import com.fulda.iuliiashtal.product.model.entity.Product;
 import com.fulda.iuliiashtal.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,6 +18,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ProductController {
 
+    private final ProductDetailFacade productDetailFacade;
     private final ProductService productService;
 
     @GetMapping("/catalog")
@@ -28,10 +31,11 @@ public class ProductController {
 
     @GetMapping("/product/{id}")
     public String viewProductDetail(@PathVariable UUID id, Model model) {
-        Product product = productService.getProductById(id);
-        model.addAttribute("product", product);
+        ProductDetailDTO productDetail = productDetailFacade.getProductDetail(id);
+        model.addAttribute("productDetail", productDetail);
         return "productDetail";
     }
+
 
     @GetMapping("/add-product")
     public String showAddProductForm(Model model) {
