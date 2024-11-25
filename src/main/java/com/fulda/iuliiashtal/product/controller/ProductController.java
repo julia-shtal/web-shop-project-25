@@ -29,6 +29,27 @@ public class ProductController {
         return "catalog";
     }
 
+    @GetMapping("/product/color")
+    public String getProductsByColor(@RequestParam String color, Model model) {
+        List<Product> filteredProducts = productService.getProductsByColor(color);
+        model.addAttribute("products", filteredProducts);
+        return "catalog";
+    }
+
+    @GetMapping("/product/category")
+    public String getProductsByCategory(@RequestParam String category, Model model) {
+        List<Product> filteredProducts = productService.getProductsByCategory(category);
+        model.addAttribute("products", filteredProducts);
+        return "catalog";
+    }
+
+    @GetMapping("product/search")
+    public String searchProducts(@RequestParam String query, Model model) {
+        List<Product> matchingProducts = productService.getProductsByName(query);
+        model.addAttribute("products", matchingProducts);
+        return "catalog";
+    }
+
     @GetMapping("/product/{id}")
     public String viewProductDetail(@PathVariable UUID id, Model model) {
         ProductDetailDTO productDetail = productDetailFacade.getProductDetail(id);
@@ -66,22 +87,11 @@ public class ProductController {
         return productService.getProductById(id);
     }
 
-    @GetMapping("api/products/color")
-    public List<Product> getProductsByColor(@RequestParam String color) {
-        return productService.getProductsByColor(color);
-    }
+
 
     @GetMapping("api/products/category")
     public List<Product> getProductsByCategory(@RequestParam String category) {
         return productService.getProductsByCategory(category);
-    }
-
-    @PostMapping("api/products")
-    public ResponseEntity<Product> createProduct(@RequestBody Product product) {
-        if (productService.checkProductExists(product)) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
-        }
-        return ResponseEntity.status(HttpStatus.CREATED).body(productService.createProduct(product));
     }
 
     @PutMapping("api/products")
