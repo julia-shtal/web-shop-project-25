@@ -132,6 +132,37 @@
         .navigation a:hover {
             background-color: #0056b3;
         }
+
+        .pagination {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .page-button {
+            padding: 10px 20px;
+            color: #fff;
+            background-color: #007bff;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background-color 0.3s, transform 0.2s;
+            font-size: 1em;
+        }
+
+        .page-button:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        .current-page {
+            font-size: 1.1em;
+            color: #333;
+            font-weight: bold;
+        }
+
     </style>
 </head>
 <body>
@@ -155,14 +186,16 @@
             </span>
     </li>
 </ul>
-<div>
-    <a th:if="${hasPrevious}" th:href="@{/catalog-paginated(page=${currentPage != null ? currentPage - 1 : 0})}">Previous</a>
-    <span>Page
+<div class="pagination">
+    <a th:if="${hasPrevious}" th:href="@{/catalog-paginated(page=${currentPage != null ? currentPage - 1 : 0})}"
+       class="page-button prev">Previous</a>
+    <span class="current-page">Page
         <span th:text="${currentPage != null ? currentPage + 1 : 1}"></span>
         of
         <span th:text="${totalPages != null ? totalPages : 1}"></span>
     </span>
-    <a th:if="${hasNext}" th:href="@{/catalog-paginated(page=${currentPage != null ? currentPage + 1 : 0})}">Next</a>
+    <a th:if="${hasNext}" th:href="@{/catalog-paginated(page=${currentPage != null ? currentPage + 1 : 0})}"
+       class="page-button next">Next</a>
 </div>
 <div class="navigation">
     <a href="/index.html">Back to Dashboard</a>
