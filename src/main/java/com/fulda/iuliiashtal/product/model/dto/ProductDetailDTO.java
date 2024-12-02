@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Getter
@@ -13,7 +14,7 @@ public class ProductDetailDTO {
     private UUID id;
     private String name;
     private String description;
-    private double price;
+    private BigDecimal price;
     private String color;
     private String category;
     private String size;

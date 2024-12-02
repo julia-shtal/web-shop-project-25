@@ -3,6 +3,8 @@ package com.fulda.iuliiashtal.product.service;
 import com.fulda.iuliiashtal.product.model.entity.Product;
 import com.fulda.iuliiashtal.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,6 +19,10 @@ public class ProductService {
 
     public List<Product> getAllProducts() {
         return repository.findAll();
+    }
+
+    public Page<Product> getAllPagedProducts(Pageable pageable) {
+        return repository.findAll(pageable);
     }
 
     public Product getProductById(UUID id) {
