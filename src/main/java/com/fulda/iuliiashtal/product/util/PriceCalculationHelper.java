@@ -1,4 +1,4 @@
-package com.fulda.iuliiashtal.product.service;
+package com.fulda.iuliiashtal.product.util;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -6,20 +6,20 @@ import java.math.RoundingMode;
 /**
  * Service for handling price-related calculations and rounding.
  *
- * <p>This service centralizes price rounding logic to ensure consistent rounding
+ * This service centralizes price rounding logic to ensure consistent rounding
  * behavior throughout the application. It rounds prices to two decimal places
  * using {@link RoundingMode#HALF_UP}, which rounds up from 0.5. The service is
- * intended to be reused wherever price rounding or related calculations are needed.</p>
+ * intended to be reused wherever price rounding or related calculations are needed.
  *
- * <p>Use cases include:
+ * Use cases include:
  * <ul>
  *     <li>Calculating the total price of a shopping cart.</li>
  *     <li>Displaying product prices for quantities > 1.</li>
  *     <li>Rounding prices after currency conversion or voucher application.</li>
  * </ul>
- * </p>
+ *
  */
-public class PriceCalculationService {
+public class PriceCalculationHelper {
 
     private static final int SCALE = 2; // Number of decimal places to round to
 

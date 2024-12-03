@@ -44,7 +44,8 @@
         }
 
         input[type="text"],
-        input[type="number"] {
+        input[type="number"],
+        select {
             width: 100%;
             padding: 10px;
             margin-top: 5px;
@@ -55,7 +56,8 @@
         }
 
         input[type="text"]:focus,
-        input[type="number"]:focus {
+        input[type="number"]:focus,
+        select:focus {
             border-color: #007bff;
             outline: none;
         }
@@ -110,10 +112,22 @@
         <input type="text" id="size" th:field="*{size}" required/>
 
         <label for="color">Color:</label>
-        <input type="text" id="color" th:field="*{color}" required/>
+        <select id="color" th:field="*{color}">
+            <option value="" disabled selected>Select a color</option>
+            <option th:each="color : ${T(com.fulda.iuliiashtal.product.model.enums.Colors).values()}"
+                    th:value="${color.name()}"
+                    th:text="${color.name()}">
+            </option>
+        </select>
 
         <label for="category">Category:</label>
-        <input type="text" id="category" th:field="*{category}" required/>
+        <select id="category" th:field="*{category}">
+            <option value="" disabled selected>Select a category</option>
+            <option th:each="category : ${T(com.fulda.iuliiashtal.product.model.enums.Categories).values()}"
+                    th:value="${category.name()}"
+                    th:text="${category.name()}">
+            </option>
+        </select>
 
         <button type="submit" class="btn-submit">Add Product</button>
     </form>
