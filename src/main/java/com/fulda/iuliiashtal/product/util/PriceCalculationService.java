@@ -1,5 +1,7 @@
 package com.fulda.iuliiashtal.product.util;
 
+import org.springframework.stereotype.Service;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
@@ -19,7 +21,8 @@ import java.math.RoundingMode;
  * </ul>
  *
  */
-public class PriceCalculationHelper {
+@Service
+public class PriceCalculationService {
 
     private static final int SCALE = 2; // Number of decimal places to round to
 

@@ -1,7 +1,7 @@
 package com.fulda.iuliiashtal.shoppingcart.entity;
 
 import com.fulda.iuliiashtal.product.model.entity.Product;
-import com.fulda.iuliiashtal.product.util.PriceCalculationHelper;
+import com.fulda.iuliiashtal.product.util.PriceCalculationService;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,13 +34,13 @@ public class ShoppingCart {
     /**
      * Calculates the total price of all items in the shopping cart.
      * Each product's total price is determined by multiplying its unit price
-     * by its quantity, using the {@link PriceCalculationHelper}.
+     * by its quantity, using the {@link PriceCalculationService}.
      *
      * @return the total price of all products in the cart as a {@link BigDecimal}.
      */
     public BigDecimal getTotalPrice() {
         return BigDecimal.valueOf(products.entrySet().stream()
-                .mapToDouble(entry -> PriceCalculationHelper
+                .mapToDouble(entry -> PriceCalculationService
                         .calculateTotalPrice(entry.getKey().getPrice(), entry.getValue())
                         .doubleValue())
                 .sum());
