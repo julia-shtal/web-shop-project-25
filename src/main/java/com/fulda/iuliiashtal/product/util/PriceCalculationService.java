@@ -24,7 +24,7 @@ import java.math.RoundingMode;
 @Service
 public class PriceCalculationService {
 
-    private static final int SCALE = 2; // Number of decimal places to round to
+    private final int SCALE = 2; // Number of decimal places to round to
 
     /**
      * Rounds the given price to two decimal places using {@link RoundingMode#HALF_UP}.
@@ -33,7 +33,7 @@ public class PriceCalculationService {
      * @return The rounded price as a {@link BigDecimal}.
      * @throws IllegalArgumentException if the input price is null.
      */
-    public static BigDecimal roundPrice(BigDecimal price) {
+    public BigDecimal roundPrice(BigDecimal price) {
         if (price == null) {
             throw new IllegalArgumentException("Price cannot be null.");
         }
@@ -49,7 +49,7 @@ public class PriceCalculationService {
      * @return The total rounded price as a {@link BigDecimal}.
      * @throws IllegalArgumentException if the unitPrice is null or the quantity is negative.
      */
-    public static BigDecimal calculateTotalPrice(BigDecimal unitPrice, int quantity) {
+    public BigDecimal calculateTotalPrice(BigDecimal unitPrice, int quantity) {
         if (unitPrice == null) {
             throw new IllegalArgumentException("Unit price cannot be null.");
         }

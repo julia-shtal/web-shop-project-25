@@ -1,59 +1,55 @@
 package com.fulda.iuliiashtal.shoppingcart.service;
 
 import com.fulda.iuliiashtal.product.model.entity.Product;
-import com.fulda.iuliiashtal.product.service.ProductService;
-import com.fulda.iuliiashtal.shoppingcart.entity.ShoppingCart;
+import com.fulda.iuliiashtal.shoppingcart.model.entity.ShoppingCart;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.UUID;
-
 /**
- * Service class for managing the shopping cart and its operations.
+ * Service class for managing the shopping cart and its associated operations.
  * <p>
- * This class provides methods to access the shopping cart and add products by their ID.
- * It interacts with the {@link ProductService} to retrieve product details.
+ * Provides methods to access the shopping cart and to add products to it.
+ * This class ensures that the shopping cart is maintained as a single instance,
+ * representing the user's current session.
  * </p>
- *
- * This class is annotated as a Spring {@link Service} and uses {@link RequiredArgsConstructor}
- * for dependency injection.
  */
 @Service
 @RequiredArgsConstructor
 public class ShoppingCartService {
 
     /**
-     * Service responsible for retrieving product details.
-     */
-    private final ProductService productService;
-
-    /**
-     * The shopping cart associated with this service.
+     * The shopping cart instance managed by this service.
+     * <p>
+     * This instance holds the current state of the user's shopping cart,
+     * including the products added and their quantities.
+     * </p>
      */
     private final ShoppingCart cart = new ShoppingCart();
 
     /**
-     * Retrieves the current shopping cart.
+     * Retrieves the current shopping cart instance.
+     * <p>
+     * This method provides access to the shopping cart for operations such as
+     * viewing its contents or calculating the total price of items.
+     * </p>
      *
-     * @return the {@link ShoppingCart} instance managed by this service.
+     * @return the {@link ShoppingCart} instance containing the user's cart data.
      */
     public ShoppingCart getCart() {
         return cart;
     }
 
     /**
-     * Adds a product to the shopping cart by its unique identifier.
+     * Adds a product to the shopping cart.
      * <p>
-     * The method fetches the product details using the {@link ProductService} and
-     * increments the quantity of the product in the shopping cart. If the product
-     * is not already in the cart, it is added with a quantity of one.
+     * If the product already exists in the cart, its quantity is incremented by one.
+     * If the product does not exist in the cart, it is added with an initial quantity of one.
      * </p>
      *
-     * @param id the unique identifier of the product to be added.
+     * @param product the {@link Product} to be added to the shopping cart.
      */
-    public void addProductByIdToCart(UUID id) {
-        Product product = productService.getProductById(id);
-        int value = cart.getProducts().getOrDefault(product, 0) + 1;
-        cart.getProducts().put(product, value);
+    public void addProductByIdToCart(Product product) {
+        int currentQuantity = cart.getProducts().getOrDefault(product, 0);
+        cart.getProducts().put(product, currentQuantity + 1);
     }
 }

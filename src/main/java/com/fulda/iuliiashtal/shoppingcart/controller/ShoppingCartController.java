@@ -7,12 +7,18 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.math.BigDecimal;
+import java.util.Collections;
+import java.util.Map;
 import java.util.UUID;
 
 /**
  * Controller for managing shopping cart operations.
- * Handles requests related to viewing and modifying the shopping cart.
+ * This controller provides endpoints for viewing the cart, adding products to the cart,
+ * and calculating totals for individual products and the entire cart.
  */
 @Controller
 @RequiredArgsConstructor
@@ -25,7 +31,8 @@ public class ShoppingCartController {
      * Displays the current state of the shopping cart.
      *
      * @param model the {@link Model} object to pass data to the view.
-     * @return the name of the view template ("cart") to render the shopping cart page.
+     *              This includes the shopping cart object to be rendered on the page.
+     * @return the name of the Thymeleaf view template ("cart") to render the shopping cart page.
      */
     @GetMapping("/cart")
     public String viewCart(Model model) {
@@ -36,8 +43,10 @@ public class ShoppingCartController {
     /**
      * Adds a product to the shopping cart.
      *
-     * @param id the {@link UUID} of the product to add to the cart.
-     * @return a redirection to the cart page. If the product is out of stock, an error query parameter is included in the URL.
+     * @param id the {@link UUID} of the product to be added to the cart.
+     * @return a redirection to the shopping cart page.
+     * If the product cannot be added due to insufficient stock,
+     * the redirection URL includes an error parameter (?error=out-of-stock).
      */
     @GetMapping("/cart-add/{id}")
     public String addToCart(@PathVariable UUID id) {
@@ -46,5 +55,33 @@ public class ShoppingCartController {
             return "redirect:/cart?error=out-of-stock";
         }
         return "redirect:/cart";
+    }
+
+    /**
+     * Calculates the total price for a specific product based on its price and quantity.
+     *
+     * @param price    the unit price of the product, represented as {@link BigDecimal}.
+     * @param quantity the quantity of the product, represented as an integer.
+     * @return a {@link Map} containing a single key-value pair where the key is "total"
+     * and the value is the calculated total price as a {@link BigDecimal}.
+     */
+    @GetMapping("/calculate-product-total")
+    @ResponseBody
+    public Map<String, BigDecimal> calculateTotalForProduct(@RequestParam BigDecimal price, @RequestParam int quantity) {
+        BigDecimal total = shoppingCartFacade.getTotalPriceForCurrentProduct(price, quantity);
+        return Collections.singletonMap("total", total);
+    }
+
+    /**
+     * Calculates the total price for all items in the shopping cart.
+     *
+     * @return a {@link Map} containing a single key-value pair where the key is "total"
+     * and the value is the total price of all items in the cart as a {@link BigDecimal}.
+     */
+    @GetMapping("/calculate-cart-total")
+    @ResponseBody
+    public Map<String, BigDecimal> calculateCartTotal() {
+        BigDecimal total = shoppingCartFacade.getTotalPrice();
+        return Collections.singletonMap("total", total);
     }
 }

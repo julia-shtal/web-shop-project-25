@@ -89,16 +89,52 @@
     <tr th:each="entry : ${cart.products.entrySet()}">
         <td th:text="${entry.key.name}">ProductName</td>
         <td th:text="${entry.value}">Quantity</td>
-        <td th:text="${entry.key.price * entry.value}">TotalPrice</td>
+        <td>
+            <span
+                    class="total-product-price"
+                    th:attr="data-price=${entry.key.price}, data-quantity=${entry.value}">
+                    Calculating...
+            </span>
+        </td>
     </tr>
 </table>
-
-<p>Total Price: $<span th:text="${cart.totalPrice}">0.00</span></p>
+<p>Total Price: <span id="total-cart-price">0.00</span></p>
 
 <div class="button-container">
     <a href="/catalog">Continue Shopping</a>
     <a href="/index.html">Back to Dashboard</a>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const totalPrices = document.querySelectorAll('.total-product-price');
+        totalPrices.forEach(span => {
+            const price = encodeURIComponent(span.dataset.price);
+            const quantity = encodeURIComponent(span.dataset.quantity);
+
+            fetch(`/calculate-product-total?price=${price}&quantity=${quantity}`)
+                .then(response => response.json())
+                .then(data => {
+                    span.textContent = `$${data.total}`;
+                })
+                .catch(error => {
+                    console.error('Error calculating total product price:', error);
+                    span.textContent = 'Error';
+                });
+        });
+        const totalCartPriceElement = document.getElementById('total-cart-price');
+
+        fetch('/calculate-cart-total')
+            .then(response => response.json())
+            .then(data => {
+                totalCartPriceElement.textContent = `$${data.total}`;
+            })
+            .catch(error => {
+                console.error('Error calculating total cart price:', error);
+                totalCartPriceElement.textContent = 'Error';
+            });
+    });
+</script>
 </body>
 </html>
 
