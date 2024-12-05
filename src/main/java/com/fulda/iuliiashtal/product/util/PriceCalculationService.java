@@ -24,8 +24,6 @@ import java.math.RoundingMode;
 @Service
 public class PriceCalculationService {
 
-    private final int SCALE = 2; // Number of decimal places to round to
-
     /**
      * Rounds the given price to two decimal places using {@link RoundingMode#HALF_UP}.
      *
@@ -37,6 +35,8 @@ public class PriceCalculationService {
         if (price == null) {
             throw new IllegalArgumentException("Price cannot be null.");
         }
+        // Number of decimal places to round to
+        int SCALE = 2;
         return price.setScale(SCALE, RoundingMode.HALF_UP);
     }
 

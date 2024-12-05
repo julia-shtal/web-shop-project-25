@@ -96,6 +96,9 @@
             border: none;
             cursor: pointer;
             transition: background-color 0.3s;
+            width: 200px; /* Set a fixed width */
+            text-align: center; /* Center-align text */
+            display: inline-block;
         }
 
         .filter-buttons a:hover, .search-form button:hover {
@@ -168,8 +171,15 @@
 <body>
 <h1>Product Catalog</h1>
 <div class="filter-buttons">
-    <a th:href="@{/product/color(color='YELLOW')}">Show Yellow Products</a>
-    <a th:href="@{/product/color(color='WHITE')}">Show White Products</a>
+    <form th:action="@{/product/color}" method="get" class="search-form">
+        <select name="color" required>
+            <option value="" disabled selected>Select a color</option>
+            <option th:each="color : ${T(com.fulda.iuliiashtal.product.model.enums.Colors).values()}"
+                    th:value="${color}"
+                    th:text="${color}"></option>
+        </select>
+        <button type="submit">Filter</button>
+    </form>
     <a th:href="@{/catalog}">Show All Products</a>
     <a th:href="@{/catalog-paginated}">Show Paginated Products</a>
 </div>
@@ -182,8 +192,8 @@
         <a th:href="@{'/product/' + ${product.id}}"
            th:text="${product.name}" class="product-name">Product Name</a>
         <span th:if="${editMode}">
-                <a th:href="@{'/product-delete/' + ${product.id}}" class="delete-button">Delete</a>
-            </span>
+            <a th:href="@{'/product-delete/' + ${product.id}}" class="delete-button">Delete</a>
+        </span>
     </li>
 </ul>
 <div class="pagination">
