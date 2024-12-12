@@ -54,4 +54,18 @@ public class InventoryRepositoryLocal {
             log.error("Failed to write inventory to inventory.json");
         }
     }
+
+    public void writeEmptyToJson() {
+        File jsonFile = new File("inventory.json");
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            // Convert UUID keys to String keys
+            Map<String, Integer> stringKeyMap = new HashMap<>();
+            objectMapper.writerWithDefaultPrettyPrinter().writeValue(jsonFile, stringKeyMap);
+            log.info("Inventory successfully written to inventory.json");
+        } catch (IOException e) {
+            e.printStackTrace();
+            log.error("Failed to write inventory to inventory.json");
+        }
+    }
 }

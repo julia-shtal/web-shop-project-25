@@ -1,11 +1,13 @@
 package com.fulda.iuliiashtal.shoppingcart.model.entity;
 
 import com.fulda.iuliiashtal.product.model.entity.Product;
+import com.fulda.iuliiashtal.product.model.enums.Currency;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,6 +29,10 @@ public class ShoppingCart {
      * representing the quantity of that product.
      */
     private Map<Product, Integer> products = new HashMap<>();
+    private BigDecimal originalTotalPrice = BigDecimal.valueOf(0);
+    private BigDecimal effectiveTotalPrice = BigDecimal.valueOf(0);
+    private boolean voucherApplied;
+    private Currency currency;
 }
 
 

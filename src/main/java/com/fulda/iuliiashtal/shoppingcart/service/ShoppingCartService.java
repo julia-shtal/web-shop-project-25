@@ -1,9 +1,12 @@
 package com.fulda.iuliiashtal.shoppingcart.service;
 
 import com.fulda.iuliiashtal.product.model.entity.Product;
+import com.fulda.iuliiashtal.product.util.PriceCalculationService;
 import com.fulda.iuliiashtal.shoppingcart.model.entity.ShoppingCart;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
 
 /**
  * Service class for managing the shopping cart and its associated operations.
@@ -14,8 +17,9 @@ import org.springframework.stereotype.Service;
  * </p>
  */
 @Service
-@RequiredArgsConstructor
 public class ShoppingCartService {
+
+    private final PriceCalculationService priceCalculationService;
 
     /**
      * The shopping cart instance managed by this service.
@@ -25,6 +29,11 @@ public class ShoppingCartService {
      * </p>
      */
     private final ShoppingCart cart = new ShoppingCart();
+
+    public ShoppingCartService(PriceCalculationService priceCalculationService) {
+        this.priceCalculationService = priceCalculationService;
+        cart.setCurrency(this.priceCalculationService.getDefaultCurrency());
+    }
 
     /**
      * Retrieves the current shopping cart instance.
@@ -52,4 +61,10 @@ public class ShoppingCartService {
         int currentQuantity = cart.getProducts().getOrDefault(product, 0);
         cart.getProducts().put(product, currentQuantity + 1);
     }
+
+    public void setEffectiveTotalPrice(BigDecimal discountedTotal, Boolean isVoucherApplied) {
+        cart.setEffectiveTotalPrice(discountedTotal);
+        cart.setVoucherApplied(isVoucherApplied);
+    }
+
 }

@@ -98,7 +98,28 @@
         </td>
     </tr>
 </table>
-<p>Total Price: <span id="total-cart-price">0.00</span></p>
+<!--<p>Total Price: <span id="total-cart-price">0.00</span></p>-->
+<div>
+    <p>Prices are displayed in <span th:text="${cart.currency}">Currency</span></p>
+    <p th:if="${!cart.voucherApplied}">Total Price: <span th:text="${cart.originalTotalPrice}">0.00</span></p>
+    <p th:if="${cart.voucherApplied}">Original Price: <span th:text="${cart.originalTotalPrice}">0.00</span></p>
+    <p th:if="${cart.voucherApplied}">Total Price: <span th:text="${cart.effectiveTotalPrice}">0.00</span></p>
+    <p th:if="${cart.voucherApplied}">A <span th:text="${voucherPercentage}">0</span>% voucher has been applied!</p>
+    <form th:if="${!cart.voucherApplied}" action="/cart/voucher" method="post">
+        <button type="submit">Apply Voucher</button>
+    </form>
+    <form th:unless="${!cart.voucherApplied}" action="/cart/removevoucher" method="post">
+        <button type="submit">Remove Voucher</button>
+    </form>
+    <form th:if="${cart.currency.name() == 'EURO'}" action="/cart/convert" method="get">
+        <input type="hidden" name="targetCurrency" value="DOLLAR" />
+        <button type="submit">Convert to Dollar</button>
+    </form>
+    <form th:if="${cart.currency.name() == 'DOLLAR'}" action="/cart/convert" method="get">
+        <input type="hidden" name="targetCurrency" value="EURO" />
+        <button type="submit">Convert to Euro</button>
+    </form>
+</div>
 
 <div class="button-container">
     <a href="/catalog">Continue Shopping</a>
@@ -115,7 +136,7 @@
             fetch(`/calculate-product-total?price=${price}&quantity=${quantity}`)
                 .then(response => response.json())
                 .then(data => {
-                    span.textContent = `$${data.total}`;
+                    span.textContent = `${data.total}`;
                 })
                 .catch(error => {
                     console.error('Error calculating total product price:', error);
@@ -127,7 +148,7 @@
         fetch('/calculate-cart-total')
             .then(response => response.json())
             .then(data => {
-                totalCartPriceElement.textContent = `$${data.total}`;
+                totalCartPriceElement.textContent = `${data.total}`;
             })
             .catch(error => {
                 console.error('Error calculating total cart price:', error);

@@ -2,8 +2,10 @@ package com.fulda.iuliiashtal.shoppingcart.facade;
 
 import com.fulda.iuliiashtal.inventory.service.InventoryService;
 import com.fulda.iuliiashtal.product.model.entity.Product;
+import com.fulda.iuliiashtal.product.model.enums.Currency;
 import com.fulda.iuliiashtal.product.service.ProductService;
 import com.fulda.iuliiashtal.product.util.PriceCalculationService;
+import com.fulda.iuliiashtal.shoppingcart.model.entity.ShoppingCart;
 import com.fulda.iuliiashtal.shoppingcart.service.ShoppingCartService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -34,7 +36,7 @@ public class ShoppingCartFacade {
      * Service managing shopping cart data, including adding, removing, and
      * retrieving products from the cart.
      */
-    private final ShoppingCartService shoppingCartService;
+    private final ShoppingCartService cartService;
 
     /**
      * Service for retrieving product details, such as pricing and availability.
@@ -46,6 +48,22 @@ public class ShoppingCartFacade {
      * based on quantity.
      */
     private final PriceCalculationService priceCalculationService;
+
+    public ShoppingCart getCart() {
+        ShoppingCart cart = cartService.getCart();
+        //cart.setOriginalTotalPrice(getTotalPrice());
+        return cart;
+    }
+
+    public void convertCurrency(Currency targetCurrency) {
+        if (getCart().getCurrency() != targetCurrency) {
+            getCart().setOriginalTotalPrice(
+                    priceCalculationService.convertCurrencies(getCart().getOriginalTotalPrice(), getCart().getCurrency(), targetCurrency));
+            getCart().setEffectiveTotalPrice(
+                    priceCalculationService.convertCurrencies(getCart().getEffectiveTotalPrice(), getCart().getCurrency(), targetCurrency));
+            getCart().setCurrency(targetCurrency);
+        }
+    }
 
     /**
      * Adds a product to the shopping cart by its unique identifier.
@@ -59,7 +77,9 @@ public class ShoppingCartFacade {
     public boolean addToCart(UUID productId) {
         if (inventoryService.reduceStockForProductId(productId)) {
             Product product = productService.getProductById(productId);
-            shoppingCartService.addProductByIdToCart(product);
+            cartService.addProductByIdToCart(product);
+            cartService.getCart().setOriginalTotalPrice(getTotalPrice());
+            applyVoucherForExistingCart();
             return true;
         }
         return false;
@@ -75,7 +95,7 @@ public class ShoppingCartFacade {
      * @return the total price of all items in the cart as a {@link BigDecimal}.
      */
     public BigDecimal getTotalPrice() {
-        return BigDecimal.valueOf(shoppingCartService.getCart().getProducts().entrySet().stream()
+        return BigDecimal.valueOf(cartService.getCart().getProducts().entrySet().stream()
                 .mapToDouble(entry -> priceCalculationService.calculateTotalPrice(entry.getKey().getPrice(), entry.getValue()).doubleValue())
                 .sum());
     }
@@ -90,5 +110,33 @@ public class ShoppingCartFacade {
      */
     public BigDecimal getTotalPriceForCurrentProduct(BigDecimal price, int quantity) {
         return priceCalculationService.calculateTotalPrice(price, quantity);
+    }
+
+    public BigDecimal getVoucherPercentage() {
+        return PriceCalculationService.VOUCHER_PERCENTAGE;
+    }
+
+    public void applyNewVoucher() {
+        if (!cartService.getCart().isVoucherApplied()) {
+            applyVoucher();
+        }
+    }
+
+    public void applyVoucherForExistingCart() {
+        if (cartService.getCart().isVoucherApplied()) {
+            applyVoucher();
+        }
+    }
+
+    private void applyVoucher() {
+        BigDecimal discountedTotal = priceCalculationService.applyPercentageVoucher(cartService.getCart().getOriginalTotalPrice(),
+                getVoucherPercentage());
+        cartService.setEffectiveTotalPrice(discountedTotal, true);
+    }
+
+    public void removeVoucher() {
+        if (cartService.getCart().isVoucherApplied()) {
+            cartService.setEffectiveTotalPrice(cartService.getCart().getOriginalTotalPrice(), false);
+        }
     }
 }

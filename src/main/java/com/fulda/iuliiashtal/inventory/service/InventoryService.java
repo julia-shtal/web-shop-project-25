@@ -43,10 +43,11 @@ public class InventoryService {
      */
     public InventoryService(InventoryRepositoryLocal repository) {
         this.repository = repository;
-        inventory = repository.readFromJson();
-        if (inventory == null) {
-            inventory = new HashMap<>();
-        }
+    }
+
+    public void clearInventory() {
+        inventory = new HashMap<>();
+        repository.writeEmptyToJson();
     }
 
     /**

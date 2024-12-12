@@ -1,5 +1,6 @@
 package com.fulda.iuliiashtal.product.util;
 
+import com.fulda.iuliiashtal.inventory.service.InventoryService;
 import com.fulda.iuliiashtal.product.model.entity.Product;
 import com.fulda.iuliiashtal.product.model.enums.Categories;
 import com.fulda.iuliiashtal.product.model.enums.Colors;
@@ -10,12 +11,15 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.List;
+import java.util.UUID;
+
 @Configuration
 public class LoadProductDatabase {
     private static final Logger log = LoggerFactory.getLogger(LoadProductDatabase.class);
 
     @Bean
-    CommandLineRunner initDatabase(ProductRepository repository) {
+    CommandLineRunner initDatabase(ProductRepository repository, InventoryService inventoryService) {
         return args -> {
             log.info("Preloading " + repository.save(new Product("Hat", 12.99, "S", Colors.YELLOW.name(), "A casual yellow hat.", Categories.ACCESSORIES.name())));
             log.info("Preloading " + repository.save(new Product("T-Shirt", 9.99, "S", Colors.WHITE.name(), "A comfortable white T-shirt.", Categories.APPAREL.name())));
@@ -38,6 +42,12 @@ public class LoadProductDatabase {
             log.info("Preloading " + repository.save(new Product("Watch", 150.00, "One Size", Colors.SILVER.name(), "Luxury silver wristwatch.", Categories.ACCESSORIES.name())));
             log.info("Preloading " + repository.save(new Product("Belt", 19.99, "M", Colors.BROWN.name(), "Classic brown leather belt.", Categories.ACCESSORIES.name())));
             log.info("Preloading " + repository.save(new Product("Cardigan", 65.00, "M", Colors.PURPLE.name(), "Warm purple cardigan.", Categories.SWEATERS.name())));
+
+            inventoryService.clearInventory();
+            List<UUID> uuids = repository.findAll().stream().map(Product::getId).toList();
+            for (UUID uuid : uuids) {
+                inventoryService.addStock(uuid, 10);
+            }
         };
     }
 }

@@ -1,14 +1,12 @@
 package com.fulda.iuliiashtal.shoppingcart.controller;
 
+import com.fulda.iuliiashtal.product.model.enums.Currency;
 import com.fulda.iuliiashtal.shoppingcart.facade.ShoppingCartFacade;
 import com.fulda.iuliiashtal.shoppingcart.service.ShoppingCartService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.Collections;
@@ -24,7 +22,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ShoppingCartController {
 
-    private final ShoppingCartFacade shoppingCartFacade;
+    private final ShoppingCartFacade cartFacade;
     private final ShoppingCartService cartService;
 
     /**
@@ -36,8 +34,27 @@ public class ShoppingCartController {
      */
     @GetMapping("/cart")
     public String viewCart(Model model) {
-        model.addAttribute("cart", cartService.getCart());
+        model.addAttribute("cart", cartFacade.getCart());
+        model.addAttribute("voucherPercentage", cartFacade.getVoucherPercentage());
         return "cart";
+    }
+
+    @PostMapping("/cart/voucher")
+    public String applyVoucher() {
+        cartFacade.applyNewVoucher();
+        return "redirect:/cart";
+    }
+
+    @PostMapping("/cart/removevoucher")
+    public String removeVoucher() {
+        cartFacade.removeVoucher();
+        return "redirect:/cart";
+    }
+
+    @GetMapping("/cart/convert")
+    public String convertToDollar(@RequestParam("targetCurrency") String targetCurrency) {
+        cartFacade.convertCurrency(Currency.valueOf(targetCurrency));
+        return "redirect:/cart";
     }
 
     /**
@@ -50,7 +67,7 @@ public class ShoppingCartController {
      */
     @GetMapping("/cart-add/{id}")
     public String addToCart(@PathVariable UUID id) {
-        boolean added = shoppingCartFacade.addToCart(id);
+        boolean added = cartFacade.addToCart(id);
         if (!added) {
             return "redirect:/cart?error=out-of-stock";
         }
@@ -68,7 +85,7 @@ public class ShoppingCartController {
     @GetMapping("/calculate-product-total")
     @ResponseBody
     public Map<String, BigDecimal> calculateTotalForProduct(@RequestParam BigDecimal price, @RequestParam int quantity) {
-        BigDecimal total = shoppingCartFacade.getTotalPriceForCurrentProduct(price, quantity);
+        BigDecimal total = cartFacade.getTotalPriceForCurrentProduct(price, quantity);
         return Collections.singletonMap("total", total);
     }
 
@@ -81,7 +98,7 @@ public class ShoppingCartController {
     @GetMapping("/calculate-cart-total")
     @ResponseBody
     public Map<String, BigDecimal> calculateCartTotal() {
-        BigDecimal total = shoppingCartFacade.getTotalPrice();
+        BigDecimal total = cartFacade.getTotalPrice();
         return Collections.singletonMap("total", total);
     }
 }
