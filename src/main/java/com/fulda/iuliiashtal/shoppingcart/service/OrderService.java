@@ -11,6 +11,9 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class OrderService {
 
+    //For 3) in exercise sheet: If I use here UserService and this service - in UserService, I will receive this exception:
+    //BeanCurrentlyInCreationException: Error creating bean with name 'orderService':
+    //Requested bean is currently in creation: Is there an unresolvable circular reference?
     public Order finalizeOrder(BigDecimal totalPrice, UUID userId) {
         return new Order(totalPrice, userId);
     }
