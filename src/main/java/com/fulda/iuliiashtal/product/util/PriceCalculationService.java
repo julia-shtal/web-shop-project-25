@@ -25,16 +25,21 @@ import java.math.RoundingMode;
 @Service
 public class PriceCalculationService {
 
-    public static final BigDecimal VOUCHER_PERCENTAGE = BigDecimal.valueOf(10);
+    private final BigDecimal voucherPercentage;
     private final String defaultCurrency;
 
-    public PriceCalculationService(@Value("${app.currency.default}") String
+    public PriceCalculationService(@Value("${app.discount.percentage}") String voucherPercentage, @Value("${app.currency.default}") String
                                            defaultCurrency) {
+        this.voucherPercentage = new BigDecimal(voucherPercentage);
         this.defaultCurrency = defaultCurrency;
     }
 
     public Currency getDefaultCurrency() {
         return Currency.valueOf(defaultCurrency);
+    }
+
+    public BigDecimal getVoucherPercentage() {
+        return voucherPercentage;
     }
 
     /**

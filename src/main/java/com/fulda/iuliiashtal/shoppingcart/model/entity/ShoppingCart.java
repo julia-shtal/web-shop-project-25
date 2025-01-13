@@ -29,8 +29,8 @@ public class ShoppingCart {
      * representing the quantity of that product.
      */
     private Map<Product, Integer> products = new HashMap<>();
-    private BigDecimal originalTotalPrice = BigDecimal.valueOf(0);
-    private BigDecimal effectiveTotalPrice = BigDecimal.valueOf(0);
+    private BigDecimal originalTotalPrice = BigDecimal.valueOf(0.0);
+    private BigDecimal effectiveTotalPrice = BigDecimal.valueOf(0.0);
     private boolean voucherApplied;
     private Currency currency;
 }

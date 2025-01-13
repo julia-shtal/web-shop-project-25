@@ -113,7 +113,7 @@ public class ShoppingCartFacade {
     }
 
     public BigDecimal getVoucherPercentage() {
-        return PriceCalculationService.VOUCHER_PERCENTAGE;
+        return priceCalculationService.getVoucherPercentage();
     }
 
     public void applyNewVoucher() {
