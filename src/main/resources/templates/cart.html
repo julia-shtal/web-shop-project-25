@@ -126,6 +126,10 @@
             <input type="hidden" name="targetCurrency" value="EURO" />
             <button type="submit">Convert to Euro</button>
         </form>
+        <form action="/checkout" method="post" th:if="${cart.originalTotalPrice > 0.0}">
+            <input type="hidden" name="totalPrice" th:value="${cart.effectiveTotalPrice != null && cart.effectiveTotalPrice > 0.0 ? cart.effectiveTotalPrice : cart.originalTotalPrice}">
+            <button type="submit">Pay Now</button>
+        </form>
     </div>
 </div>
 <div class="button-container">

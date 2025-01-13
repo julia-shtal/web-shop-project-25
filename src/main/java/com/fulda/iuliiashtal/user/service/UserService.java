@@ -16,6 +16,11 @@ public class UserService {
 
     private final UserRepository repository;
 
+    public UUID getUserId() {
+        // Hardcoded user ID as specified
+        return UUID.randomUUID();
+    }
+
     public List<User> getUsers() {
         return repository.readFromJson();
     }

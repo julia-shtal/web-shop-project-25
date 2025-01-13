@@ -51,7 +51,6 @@ public class ShoppingCartFacade {
 
     public ShoppingCart getCart() {
         ShoppingCart cart = cartService.getCart();
-        //cart.setOriginalTotalPrice(getTotalPrice());
         return cart;
     }
 
@@ -79,6 +78,7 @@ public class ShoppingCartFacade {
             Product product = productService.getProductById(productId);
             cartService.addProductByIdToCart(product);
             cartService.getCart().setOriginalTotalPrice(getTotalPrice());
+            cartService.getCart().setEffectiveTotalPrice(getTotalPrice());
             applyVoucherForExistingCart();
             return true;
         }
