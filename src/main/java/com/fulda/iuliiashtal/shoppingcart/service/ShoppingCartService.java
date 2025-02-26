@@ -3,7 +3,6 @@ package com.fulda.iuliiashtal.shoppingcart.service;
 import com.fulda.iuliiashtal.product.model.entity.Product;
 import com.fulda.iuliiashtal.product.util.PriceCalculationService;
 import com.fulda.iuliiashtal.shoppingcart.model.entity.ShoppingCart;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;

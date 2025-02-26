@@ -2,7 +2,6 @@ package com.fulda.iuliiashtal.shoppingcart.controller;
 
 import com.fulda.iuliiashtal.product.model.enums.Currency;
 import com.fulda.iuliiashtal.shoppingcart.facade.ShoppingCartFacade;
-import com.fulda.iuliiashtal.shoppingcart.service.ShoppingCartService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,7 +22,6 @@ import java.util.UUID;
 public class ShoppingCartController {
 
     private final ShoppingCartFacade cartFacade;
-    private final ShoppingCartService cartService;
 
     /**
      * Displays the current state of the shopping cart.
