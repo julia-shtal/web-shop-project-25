@@ -17,10 +17,10 @@ A full-stack web shop application developed as part of the **Distributed Applica
 
 ## Tech Stack
 
-| Layer    | Technology                                             |
-| -------- | ------------------------------------------------------ |
-| Frontend | Svelte, HTML, CSS                                      |
-| Backend  | Java (Spring Boot or similar), Maven                   |
+| Layer    | Technology                                            |
+| -------- | ----------------------------------------------------- |
+| Frontend | Svelte, HTML, CSS                                     |
+| Backend  | Java (Spring Boot), Maven                   |
 | Data     | JSON files (products.json, users.json, inventory.json) |
 
 ## Project Structure
